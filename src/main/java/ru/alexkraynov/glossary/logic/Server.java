@@ -81,6 +81,10 @@ public class Server {
         stmt = connection.createStatement();
         String sql = "SELECT * FROM example WHERE name='" + line + "'";
         rs = stmt.executeQuery(sql);
+        
+//        7890890
+//        7890987078
+//        789087907890
 
         while (rs.next()) {
             JSONObject obj = new JSONObject();
