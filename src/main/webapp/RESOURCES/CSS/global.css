@@ -1,0 +1,95 @@
+body {
+    background: #f3f2f3;
+    color: #000000;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+#leftpanel {
+    position: absolute; 
+}
+
+#lang {
+    margin-top: 5px;
+    margin-left: 1140px;
+}
+
+#container {
+    background: #FFFFFF;
+    margin: 5px auto;
+    width: 1000px;
+    height: 450px;
+}
+
+#header {
+    background: #838283;
+    height: 200px;
+    width: 1000px;
+}
+
+#avatar {
+    clear: right;
+}
+
+#navigation {
+    background: #a2a2a2;
+    width: 1000px;
+    height: 20px;
+}
+
+#menu {
+    background: chartreuse;
+    float: left;   
+    width: 145px;
+    height: 390px;
+    padding-left: 5px;
+}
+
+#content {
+    background: #d2d0d2;
+    float: right;
+    width: 850px;
+    height: 390px;
+}
+
+/*#browse {
+     
+}*/
+
+#clear {
+    clear:both;
+}
+
+#footer {
+    background: #d2d0d2;
+    height: 30px;
+    width: 1000px;
+}
+
+/*body{*/
+/*    margin-top:1px;
+    margin-right:40px;
+    margin-bottom:10px;
+    margin-left:70px;
+    background-color:white;*/
+
+/*      background-image:url("foto.jpg");
+      background-image:url("http://votrube.ru/uploads/posts/2015-07/1437678343_1437624658_12.jpg");  
+      background-repeat:no-repeat;
+      background-repeat:repeat-x;
+      background-repeat:repeat-y;
+      background-position:left center;*/
+/*}*/
+
+/*#main {
+    height: 500px;
+    width: 1000px;
+    border: black;
+    border-style: solid;
+    border-color: red;
+}
+
+.languageicon {
+    margin-left: 1000px; 
+    margin-top: 10px;
+}*/
