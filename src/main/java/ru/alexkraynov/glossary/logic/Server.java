@@ -9,34 +9,36 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import ru.alexkraynov.glossary.logic.HibernateUtil;
 
 public class Server {
 
     private static Server instance;
     private static Connection connection;
 
-    private Server() {
-        try {
+    private Server() {     
+//        try {
 //            Class.forName("com.mysql.jdbc.Driver");
 //            String url = "jdbc:mysql://localhost:3306/2015301_1?zeroDateTimeBehavior=convertToNull";
 //            connection = DriverManager.getConnection(url, "b2015301_1", "Hj9ptkqj");
-
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
-            String url = "jdbc:derby://localhost:1527/example";
-            connection = DriverManager.getConnection(url, "Alex", "1");
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
+//
+//            Class.forName("org.apache.derby.jdbc.ClientDriver");
+//            String url = "jdbc:derby://localhost:1527/example";
+//            connection = DriverManager.getConnection(url, "Alex", "1");
+//        } catch (SQLException | ClassNotFoundException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 
-    public static synchronized Server getInstance() {
-        if (instance == null) {
-            instance = new Server();
-        }
-        return instance;
-    }
+//    public static synchronized Server getInstance() {
+//        if (instance == null) {
+//            instance = new Server();
+//        }
+//        return instance;
+//    }
 
     public List getAllTable() throws SQLException {
         List strike = new ArrayList();
@@ -47,7 +49,7 @@ public class Server {
         rs = stmt.executeQuery(sql);
         while (rs.next()) {
             Glossary word = new Glossary();
-            word.setNum(rs.getInt(1));
+            word.setId(rs.getInt(1));
             word.setName(rs.getString(2));
             strike.add(word);
         }
@@ -65,7 +67,7 @@ public class Server {
         rs = stmt.executeQuery(sql);
         while (rs.next()) {
             Glossary word = new Glossary();
-            word.setNum(rs.getInt(1));
+            word.setId(rs.getInt(1));
             word.setName(rs.getString(2));
             strike.add(word);
         }
@@ -75,20 +77,19 @@ public class Server {
     }
 
     public String getGSONArray(String line) throws SQLException, IOException {
+        Session session = HibernateUtil.getSessionFactofy().openSession();
+        session.beginTransaction();
+        
         JSONArray array = new JSONArray();
         Statement stmt = null;
         ResultSet rs = null;
         stmt = connection.createStatement();
         String sql = "SELECT * FROM example WHERE name='" + line + "'";
         rs = stmt.executeQuery(sql);
-        
-//        7890890
-//        7890987078
-//        789087907890
 
         while (rs.next()) {
             JSONObject obj = new JSONObject();
-            obj.put("num", rs.getInt(1));
+            obj.put("id", rs.getInt(1));
             obj.put("name", rs.getString(2).trim());
             array.add(obj);
         }
@@ -99,7 +100,7 @@ public class Server {
 
         rs.close();
         stmt.close();
-        
+
         return jsonText;
     }
 

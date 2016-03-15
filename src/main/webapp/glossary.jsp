@@ -50,7 +50,7 @@
                         var json = JSON.parse(ajaxRequest.responseText);
                         $("#results").empty();
                         for (i = 0; i < json.length; i++) {
-                            $("#results").append(json[i].num + " " + json[i].name + "<br>");
+                            $("#results").append(json[i].id + " " + json[i].name + "<br>");
                         }
                     }
                 }

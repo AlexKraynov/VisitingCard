@@ -2,24 +2,24 @@ package ru.alexkraynov.glossary.logic;
 
 public class Glossary {
 
-    private int num;
+    private int id;
     private String name;
 
     public Glossary() {
 
     }
 
-    public Glossary(int num, String name) {
-        this.num = num;
+    public Glossary(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public int getNum() {
-        return num;
+    public int getId() {
+        return id;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
