@@ -19,7 +19,7 @@ public class Server {
     private static Server instance;
     private static Connection connection;
 
-    private Server() {     
+//    private Server() {     
 //        try {
 //            Class.forName("com.mysql.jdbc.Driver");
 //            String url = "jdbc:mysql://localhost:3306/2015301_1?zeroDateTimeBehavior=convertToNull";
@@ -31,7 +31,7 @@ public class Server {
 //        } catch (SQLException | ClassNotFoundException ex) {
 //            System.out.println(ex.getMessage());
 //        }
-    }
+//    }
 
 //    public static synchronized Server getInstance() {
 //        if (instance == null) {
