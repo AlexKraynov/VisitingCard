@@ -48,9 +48,11 @@
                 if (ajaxRequest.readyState === 4) {
                     if (ajaxRequest.status === 200) {
                         var json = JSON.parse(ajaxRequest.responseText);
-                        $("#results").empty();
+                        $("#id").empty();
+                        $("#name").empty();
                         for (i = 0; i < json.length; i++) {
-                            $("#results").append(json[i].id + " " + json[i].name + "<br>");
+                            $("#id").append(json[i].id + "<br>");
+                            $("#name").append(json[i].name + "<br>");
                         }
                     }
                 }
@@ -59,10 +61,19 @@
     </head>
     <body>      
         Поле для ввода:
+        <form action="ajaxSearch()">
+            <table>
+                <th><input id="search" type="text" size="50"/></th>
+                <th><p><input type="button" id="find" value="Поиск" onclick="ajaxSearch()"/></p></th>
+            </table>
+        </form>    
+
         <table>
-            <th><input id="search" type="text" size="50"/></th>
-            <th><p><input type="button" id="find" value="Поиск" onclick="ajaxSearch()"/></p></th>
+            <caption></caption>
+            <tr>
+                <td><div id="id"></div></td>
+                <td><div id="name"></div></td>
+            </tr>
         </table>
-        <div id="results"></div>
     </body>
 </html>

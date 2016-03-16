@@ -15,13 +15,14 @@ public class AJAXServlet extends HttpServlet {
             throws ServletException, IOException {
         String search = request.getParameter("search");
         if (search != null) {
-//            try {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+            try {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(Server.getInstance().getHibernateGSONArray(search));
 //                response.getWriter().write(Server.getInstance().getGSONArray(search));
-//            } catch (SQLException ex) {
-//                Logger.getLogger(ex.getMessage());
-//            }
+            } catch (SQLException ex) {
+                Logger.getLogger(ex.getMessage());
+            }
         } else {
             response.setContentType("text/xml");
             response.setHeader("Cache-Control", "no-cache");

@@ -8,19 +8,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import ru.alexkraynov.glossary.logic.HibernateUtil;
 
 public class Server {
 
     private static Server instance;
     private static Connection connection;
+    private static SessionFactory factory;
 
-//    private Server() {     
+    private Server() {
 //        try {
+        Configuration configuration = new Configuration();
+        configuration.configure();
+        factory = configuration.buildSessionFactory(new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties()).build());
 //            Class.forName("com.mysql.jdbc.Driver");
 //            String url = "jdbc:mysql://localhost:3306/2015301_1?zeroDateTimeBehavior=convertToNull";
 //            connection = DriverManager.getConnection(url, "b2015301_1", "Hj9ptkqj");
@@ -31,14 +41,14 @@ public class Server {
 //        } catch (SQLException | ClassNotFoundException ex) {
 //            System.out.println(ex.getMessage());
 //        }
-//    }
+    }
 
-//    public static synchronized Server getInstance() {
-//        if (instance == null) {
-//            instance = new Server();
-//        }
-//        return instance;
-//    }
+    public static synchronized Server getInstance() {
+        if (instance == null) {
+            instance = new Server();
+        }
+        return instance;
+    }
 
     public List getAllTable() throws SQLException {
         List strike = new ArrayList();
@@ -77,9 +87,6 @@ public class Server {
     }
 
     public String getGSONArray(String line) throws SQLException, IOException {
-        Session session = HibernateUtil.getSessionFactofy().openSession();
-        session.beginTransaction();
-        
         JSONArray array = new JSONArray();
         Statement stmt = null;
         ResultSet rs = null;
@@ -100,6 +107,34 @@ public class Server {
 
         rs.close();
         stmt.close();
+
+        return jsonText;
+    }
+
+    public String getHibernateGSONArray(String line) throws SQLException, IOException {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        tx = session.beginTransaction();
+        String hql = "FROM Glossary G WHERE G.name = '" + line +"'";
+        Query query = session.createQuery(hql);
+        List result = query.list();
+
+        JSONArray array = new JSONArray();
+
+        for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+            Glossary glossary = (Glossary) iterator.next();
+            JSONObject obj = new JSONObject();
+            obj.put("id", glossary.getId());
+            obj.put("name", glossary.getName());
+            array.add(obj);
+        }
+
+        StringWriter out = new StringWriter();
+        array.writeJSONString(out);
+        String jsonText = out.toString();
+
+        tx.commit();
+        session.close();
 
         return jsonText;
     }
