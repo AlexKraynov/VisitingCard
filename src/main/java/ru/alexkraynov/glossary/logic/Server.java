@@ -16,6 +16,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Distinct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -111,11 +112,40 @@ public class Server {
         return jsonText;
     }
 
-    public String getHibernateGSONArray(String line) throws SQLException, IOException {
+    public String getLifeSearch(String line) throws SQLException, IOException {
         Session session = factory.openSession();
         Transaction tx = null;
         tx = session.beginTransaction();
-        String hql = "FROM Glossary G WHERE G.name = '" + line +"'";
+//        String hql = "FROM Glossary";
+        String hql = "FROM Glossary G WHERE G.name LIKE '" + line.trim() + "%'";
+        Query query = session.createQuery(hql);
+        List result = query.list();
+
+        JSONArray array = new JSONArray();
+
+        for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+            Glossary glossary = (Glossary) iterator.next();
+            JSONObject obj = new JSONObject();
+            obj.put("id", glossary.getId());
+            obj.put("name", glossary.getName().trim());
+            array.add(obj);
+        }
+
+        StringWriter out = new StringWriter();
+        array.writeJSONString(out);
+        String jsonText = out.toString();
+
+        tx.commit();
+        session.close();
+
+        return jsonText;
+    }
+
+    public String getFullSearch(String line) throws SQLException, IOException {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        tx = session.beginTransaction();
+        String hql = "FROM Glossary G WHERE G.name = '" + line.trim() + "'";
         Query query = session.createQuery(hql);
         List result = query.list();
 

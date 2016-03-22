@@ -18,7 +18,7 @@ public class AJAXServlet extends HttpServlet {
             try {
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().write(Server.getInstance().getHibernateGSONArray(search));
+                response.getWriter().write(Server.getInstance().getLifeSearch(search));
 //                response.getWriter().write(Server.getInstance().getGSONArray(search));
             } catch (SQLException ex) {
                 Logger.getLogger(ex.getMessage());
