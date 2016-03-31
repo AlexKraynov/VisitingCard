@@ -7,16 +7,24 @@
         <servlet-class>ru.alexkraynov.glossary.web.GlossaryServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AJAXServlet</servlet-name>
-        <servlet-class>ru.alexkraynov.glossary.web.AJAXServlet</servlet-class>
+        <servlet-name>LiveSearchServlet</servlet-name>
+        <servlet-class>ru.alexkraynov.glossary.web.LiveSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetValueServlet</servlet-name>
+        <servlet-class>ru.alexkraynov.glossary.web.GetValueServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>GlossaryServlet</servlet-name>
         <url-pattern>/servlet/GlossaryServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AJAXServlet</servlet-name>
-        <url-pattern>/servlet/AJAXServlet</url-pattern>
+        <servlet-name>LiveSearchServlet</servlet-name>
+        <url-pattern>/servlet/LiveSearchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetValueServlet</servlet-name>
+        <url-pattern>/servlet/GetValueServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

@@ -12,12 +12,12 @@
 
     <name>VisitingCardMaven</name>
     
-    <distributionManagement>
+    <!--    <distributionManagement>
         <repository>
             <id>ftp-repository</id>
             <url>ftp://site1.2015301.brim.ru/1/</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -60,13 +60,13 @@
     </dependencies>
     
     <build>
-        <extensions>
+        <!--        <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ftp</artifactId>
                 <version>2.10</version>
             </extension>
-        </extensions>
+        </extensions>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -96,7 +96,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.6</version>

@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,21 +28,19 @@ public class Server {
     private static SessionFactory factory;
 
     private Server() {
-//        try {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        factory = configuration.buildSessionFactory(new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build());
+//        Configuration configuration = new Configuration();
+//        configuration.configure();
+//        factory = configuration.buildSessionFactory(new StandardServiceRegistryBuilder()
+//                .applySettings(configuration.getProperties()).build());        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/2015301_1?zeroDateTimeBehavior=convertToNull";
+            connection = DriverManager.getConnection(url, "b2015301_1", "Hj9ptkqj");
 //            Class.forName("com.mysql.jdbc.Driver");
-//            String url = "jdbc:mysql://localhost:3306/2015301_1?zeroDateTimeBehavior=convertToNull";
-//            connection = DriverManager.getConnection(url, "b2015301_1", "Hj9ptkqj");
-//
-//            Class.forName("org.apache.derby.jdbc.ClientDriver");
-//            String url = "jdbc:derby://localhost:1527/example";
+//            String url = "jdbc:mysql://localhost:3306/glossary?zeroDateTimeBehavior=convertToNull";
 //            connection = DriverManager.getConnection(url, "Alex", "1");
-//        } catch (SQLException | ClassNotFoundException ex) {
-//            System.out.println(ex.getMessage());
-//        }
+        } catch (ClassNotFoundException | SQLException e) {
+        }
     }
 
     public static synchronized Server getInstance() {
@@ -51,40 +50,59 @@ public class Server {
         return instance;
     }
 
-    public List getAllTable() throws SQLException {
-        List strike = new ArrayList();
+    public String getSqlLiveSearch(String line) throws SQLException, IOException {
+        JSONArray array = new JSONArray();
         Statement stmt = null;
         ResultSet rs = null;
         stmt = connection.createStatement();
-        String sql = "SELECT * FROM example";
+        String sql = "SELECT id, term FROM term WHERE term LIKE '" + line.trim() + "%'";;
         rs = stmt.executeQuery(sql);
+
         while (rs.next()) {
-            Glossary word = new Glossary();
-            word.setId(rs.getInt(1));
-            word.setName(rs.getString(2));
-            strike.add(word);
+            JSONObject obj = new JSONObject();
+            obj.put("id", rs.getInt(1));
+            obj.put("name", rs.getString(2).trim());
+            array.add(obj);
         }
+
+        StringWriter out = new StringWriter();
+        array.writeJSONString(out);
+        String jsonText = out.toString();
+
         rs.close();
         stmt.close();
-        return strike;
+
+        return jsonText;
     }
 
-    public List getAllTable(String line) throws SQLException {
-        List strike = new ArrayList();
+    public String getSqlValue(String line, String lang) throws SQLException, IOException {
+        JSONArray array = new JSONArray();
         Statement stmt = null;
         ResultSet rs = null;
+        String sql = "";
         stmt = connection.createStatement();
-        String sql = "SELECT * FROM example WHERE name='" + line + "'";
-        rs = stmt.executeQuery(sql);
-        while (rs.next()) {
-            Glossary word = new Glossary();
-            word.setId(rs.getInt(1));
-            word.setName(rs.getString(2));
-            strike.add(word);
+        if (lang.trim().equals("EN")) {
+            sql = "SELECT t.term, m.meaning FROM term t, meaning_en m WHERE t.id=m.term_id AND t.term='" + line.trim() + "'";
+        } else {
+            sql = "SELECT t.term, m.meaning FROM term t, meaning m WHERE t.id=m.term_id AND t.term='" + line.trim() + "'";
         }
+        rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", rs.getString(1).trim());
+            obj.put("name", rs.getString(2).trim());
+            array.add(obj);
+        }
+
+        StringWriter out = new StringWriter();
+        array.writeJSONString(out);
+        String jsonText = out.toString();
+
         rs.close();
         stmt.close();
-        return strike;
+
+        return jsonText;
     }
 
     public String getGSONArray(String line) throws SQLException, IOException {
@@ -112,13 +130,14 @@ public class Server {
         return jsonText;
     }
 
-    public String getLifeSearch(String line) throws SQLException, IOException {
+    public String getLiveSearch(String line) throws SQLException, IOException {
         Session session = factory.openSession();
         Transaction tx = null;
         tx = session.beginTransaction();
-//        String hql = "FROM Glossary";
         String hql = "FROM Glossary G WHERE G.name LIKE '" + line.trim() + "%'";
+//        String sql = "SELECT * FROM EXAMPLE E WHERE E.name LIKE '" + line.trim() + "%'";
         Query query = session.createQuery(hql);
+//        Query query = session.createSQLQuery(sql);
         List result = query.list();
 
         JSONArray array = new JSONArray();
@@ -141,7 +160,7 @@ public class Server {
         return jsonText;
     }
 
-    public String getFullSearch(String line) throws SQLException, IOException {
+    public String getValue(String line) throws SQLException, IOException {
         Session session = factory.openSession();
         Transaction tx = null;
         tx = session.beginTransaction();

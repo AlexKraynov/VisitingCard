@@ -29,4 +29,10 @@ public class Glossary {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Glossary g = (Glossary) obj;
+        return g.name == this.name;
+    }
 }

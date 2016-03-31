@@ -6,6 +6,15 @@ public class GlossaryFrame {
 
     private Collection strike;
     private String search;
+    private String lang;
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 
     public String getSearch() {
         return search;
